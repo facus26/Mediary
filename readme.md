@@ -109,10 +109,10 @@ If you prefer full control but want to use the builder pattern:
 
 ```csharp
 services.AddMediary()
-    AddRequestHandler<GetAllPlansQuery, GetAllPlansHandler>()
-    AddRequestHandler<List<PlanDto>, GetAllPlansQuery, GetAllPlansHandler>()
-    AddPipelineBehaviors<GetAllPlansQuery, LoggingBehavior<GetAllPlansQuery>>()
-    AddPipelineBehaviors<List<PlanDto>, GetAllPlansQuery, LoggingBehavior<List<PlanDto>, GetAllPlansQuery>>();
+    .AddRequestHandler<GetAllPlansQuery, GetAllPlansHandler>()
+    .AddRequestHandler<List<PlanDto>, GetAllPlansQuery, GetAllPlansHandler>()
+    .AddPipelineBehaviors<GetAllPlansQuery, LoggingBehavior<GetAllPlansQuery>>()
+    .AddPipelineBehaviors<List<PlanDto>, GetAllPlansQuery, LoggingBehavior<List<PlanDto>, GetAllPlansQuery>>();
 ```
 
 You can also override the dispatcher:
