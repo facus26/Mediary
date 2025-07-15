@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <!-- Versioning -->
+    <Version>0.1.0</Version>
+    <AssemblyVersion>0.1.0.0</AssemblyVersion>
+    <FileVersion>0.1.0.0</FileVersion>
+    <PackageVersion>0.1.0</PackageVersion>
+
+    <!-- NuGet Package Metadata -->
+    <PackageId>Mediary</PackageId>
+    <Title>Mediary</Title>
+    <Description>Mediary is a lightweight .NET request/response dispatcher with pipeline support, inspired by MediatR but fully open-source and license-free.</Description>
+    <Authors>Facundo Juarez</Authors>
+    <Company>facus26</Company>
+    <PackageProjectUrl>https://github.com/facus26/Mediary</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/facus26/Mediary</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Copyright>Copyright © 2025 facus26</Copyright>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.3" />
+  </ItemGroup>
+
+</Project>

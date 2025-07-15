@@ -1,0 +1,13 @@
+<Project>
+  <PropertyGroup>
+    <!-- Common metadata for all projects in the solution -->
+    <Authors>Facundo Juarez</Authors>
+    <Company>facus26</Company>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/facus26/Mediary</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>https://github.com/facus26/Mediary</PackageProjectUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Copyright>Copyright © 2025 facus26</Copyright>
+  </PropertyGroup>
+</Project>
