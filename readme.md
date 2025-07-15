@@ -97,11 +97,9 @@ Mediary supports flexible registration depending on your needs:
 ### ✅ Option 1 — Auto-registration (Recommended)
 
 ```csharp
-services.AddMediary(cfg =>
-{
-    cfg.AddRequestHandlersFromAssembly(typeof(Program).Assembly)
-       .AddPipelineBehaviorsFromAssembly(typeof(Program).Assembly);
-});
+services.AddMediary()
+    .AddRequestHandlersFromAssembly(typeof(Program).Assembly)
+    .AddPipelineBehaviorsFromAssembly(typeof(Program).Assembly);
 ```
 
 This will:
@@ -110,21 +108,16 @@ This will:
 * Scan and register all `IRequestHandler<>` and `IRequestHandler<,>`
 * Scan and register all `IRequestPipelineBehavior<>` and `IRequestPipelineBehavior<,>`
 
-
-
 ### 🔧 Option 2 — Semi-manual (Builder API)
 
 If you prefer full control but want to use the builder pattern:
 
 ```csharp
-services.AddMediary(cfg =>
-{
-    cfg.AddRequestHandler<GetAllPlansQuery, GetAllPlansHandler>();
-    cfg.AddRequestHandler<List<PlanDto>, GetAllPlansQuery, GetAllPlansHandler>();
-
-    cfg.AddPipelineBehaviors<GetAllPlansQuery, LoggingBehavior<GetAllPlansQuery>>();
-    cfg.AddPipelineBehaviors<List<PlanDto>, GetAllPlansQuery, LoggingBehavior<List<PlanDto>, GetAllPlansQuery>>();
-});
+services.AddMediary()
+    AddRequestHandler<GetAllPlansQuery, GetAllPlansHandler>()
+    AddRequestHandler<List<PlanDto>, GetAllPlansQuery, GetAllPlansHandler>()
+    AddPipelineBehaviors<GetAllPlansQuery, LoggingBehavior<GetAllPlansQuery>>()
+    AddPipelineBehaviors<List<PlanDto>, GetAllPlansQuery, LoggingBehavior<List<PlanDto>, GetAllPlansQuery>>();
 ```
 
 You can also override the dispatcher:
@@ -139,9 +132,7 @@ If you want **zero coupling** to Mediary’s builder or extension methods, you c
 
 ```csharp
 services.AddScoped<IRequestDispatcher, RequestDispatcher>();
-
 services.AddScoped<IRequestHandler<List<PlanDto>, GetAllPlansQuery>, GetAllPlansHandler>();
-
 services.AddScoped<IRequestPipelineBehavior<List<PlanDto>, GetAllPlansQuery>, LoggingBehavior<List<PlanDto>, GetAllPlansQuery>>();
 ```
 
