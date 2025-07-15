@@ -14,7 +14,7 @@
     <!-- NuGet Package Metadata -->
     <PackageId>Mediary</PackageId>
     <Title>Mediary</Title>
-    <Description>Mediary is a lightweight .NET request/response dispatcher with pipeline support, inspired by MediatR but fully open-source and license-free.</Description>
+    <Description>Mediary is a lightweight .NET request/response dispatcher with pipeline support — inspired by MediatR but built from scratch with no external dependencies.</Description>
     <Authors>Facundo Juarez</Authors>
     <Company>facus26</Company>
     <PackageProjectUrl>https://github.com/facus26/Mediary</PackageProjectUrl>

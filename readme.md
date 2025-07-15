@@ -1,29 +1,25 @@
-﻿# Mediary - Lightweight Request Dispatcher for .NET
+﻿# Mediary — Lightweight Request Dispatcher for .NET
 
-**Mediary** is a lightweight, open-source alternative to MediatR with full request handling and pipeline support — **free and dependency-free**.
+**Mediary** is a minimal, open-source request/response dispatcher for .NET —  
+inspired by MediatR, but built from scratch with **no external dependencies**.
+
+It provides clean request handling, extensible pipeline behaviors, and a flexible DI-friendly architecture — all without relying on third-party libraries.
 
 ---
 
 ## 🚨 Why Mediary?
 
-Starting with version 13, **MediatR is no longer fully free**. While it's still great, some features now require a commercial license.
+**Mediary** is a lightweight request dispatcher for .NET designed to offer a clean, extensible, and dependency-free alternative to more complex mediators.
 
-**Mediary was built to:**
+It focuses on **performance**, **clarity**, and **developer control**, while maintaining compatibility with the .NET dependency injection ecosystem.
 
-- ✅ Be **fully free** and open-source (MIT licensed)
-- ✅ Provide **zero-dependency request handling**
-- ✅ Allow **full control** over your request execution logic
-- ✅ Support custom pipelines and DI-friendly structure
+### ✅ Key benefits
 
----
-
-## ⚠️ Important Note About MediatR
-
-MediatR is an excellent, mature, and widely used library with a rich ecosystem and years of battle-tested experience.
-
-**Mediary is not intended to replace MediatR** — rather, it offers a simple, free alternative for projects that need full control and a zero-dependency solution.
-
-If you value MediatR’s features and support, continuing to use MediatR is a great choice.
+- ⚡ **Lightweight and fast** — no unnecessary overhead or runtime reflection
+- 🧩 **Extensible pipeline behaviors** — clean middleware-style request handling
+- 🧼 **Minimalist design** — no external dependencies, no magic
+- 🧪 **Test-friendly** — everything is composable and DI-compatible
+- 📦 **NuGet-ready** — simple to install and integrate
 
 ---
 
@@ -47,8 +43,7 @@ Or via the NuGet UI in Visual Studio by searching for **Mediary**.
 * ✅ Built-in dispatcher (`IRequestDispatcher`)
 * ✅ Middleware support (`IRequestPipelineBehavior`)
 * ✅ Generic and specific pipeline registration
-* ✅ Clean architecture and clear boundaries
-* ✅ Zero dependencies and easy to test
+
 
 ---
 
