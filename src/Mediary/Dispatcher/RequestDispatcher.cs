@@ -8,7 +8,7 @@ namespace Mediary.Dispatcher;
 /// Default implementation of <see cref="IRequestDispatcher"/> using dependency injection
 /// to resolve request handlers and pipeline behaviors.
 /// </summary>
-internal sealed class RequestDispatcher : IRequestDispatcher
+public sealed class RequestDispatcher : IRequestDispatcher
 {
     private readonly IServiceProvider _serviceProvider;
 
@@ -23,8 +23,7 @@ internal sealed class RequestDispatcher : IRequestDispatcher
     public async Task DispatchAsync<TRequest>(TRequest request)
         where TRequest : IRequest
     {
-        var handler = _serviceProvider.GetRequiredService<IRequestHandler<TRequest>>()
-            ?? throw new InvalidOperationException($"No handler found for request type {request.GetType().Name}");
+        var handler = _serviceProvider.GetRequiredService<IRequestHandler<TRequest>>();
         var behaviors = _serviceProvider.GetServices<IRequestPipelineBehavior<TRequest>>().ToList();
 
         await BehaviorInvoker.ExecuteWithPipeline(request, handler, behaviors);
@@ -34,8 +33,7 @@ internal sealed class RequestDispatcher : IRequestDispatcher
     public async Task<TResponse> ExecuteAsync<TResponse, TRequest>(TRequest request)
         where TRequest : IRequest<TResponse>
     {
-        var handler = _serviceProvider.GetRequiredService<IRequestHandler<TResponse, TRequest>>()
-            ?? throw new InvalidOperationException($"No handler found for request type {request.GetType().Name}");
+        var handler = _serviceProvider.GetRequiredService<IRequestHandler<TResponse, TRequest>>();
         var behaviors = _serviceProvider.GetServices<IRequestPipelineBehavior<TResponse, TRequest>>().ToList();
 
         return await BehaviorInvoker.ExecuteWithPipeline(request, handler, behaviors);

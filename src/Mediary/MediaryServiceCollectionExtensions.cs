@@ -1,5 +1,4 @@
 ﻿using Mediary.Dispatcher;
-using Mediary.Pipeline.Behaviors;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Mediary;
