@@ -26,4 +26,3 @@ public interface IRequestDispatcher
     public Task<TResponse> ExecuteAsync<TResponse, TRequest>(TRequest request)
         where TRequest : IRequest<TResponse>;
 }
-
