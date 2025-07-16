@@ -6,7 +6,6 @@ on:
     paths:
       - 'src/**'
   pull_request:
-    branches-ignore: [ "main" ]
     paths:
       - 'src/**'
 
