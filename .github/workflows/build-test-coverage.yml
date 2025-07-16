@@ -16,19 +16,27 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+
     - name: Restore dependencies
       run: dotnet restore
+      working-directory: ./src
+
     - name: Build
       run: dotnet build --no-restore
+      working-directory: ./src
+
     - name: Test with coverage
       run: dotnet test --no-build --collect:"XPlat Code Coverage" --results-directory ./TestResults
+      working-directory: ./src
+
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: ./TestResults/**/coverage.cobertura.xml
+        files: ./src/TestResults/**/coverage.cobertura.xml
         fail_ci_if_error: true
