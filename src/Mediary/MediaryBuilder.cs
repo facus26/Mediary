@@ -93,9 +93,10 @@ public sealed class MediaryBuilder
     public MediaryBuilder AddOpenPipelineBehaviors(Type implementationType)
     {
         var interfaces = implementationType.GetInterfaces()
-            .Where(iface => iface.IsGenericType &&
-                (iface.GetGenericTypeDefinition() == typeof(IRequestPipelineBehavior<>) ||
-                 iface.GetGenericTypeDefinition() == typeof(IRequestPipelineBehavior<,>)))
+            .Where(iface => iface.IsGenericType)
+            .Where(iface =>
+                iface.GetGenericTypeDefinition() == typeof(IRequestPipelineBehavior<>) ||
+                iface.GetGenericTypeDefinition() == typeof(IRequestPipelineBehavior<,>))
             .Where(iface => iface.ContainsGenericParameters)
             .Distinct()
             .ToList();

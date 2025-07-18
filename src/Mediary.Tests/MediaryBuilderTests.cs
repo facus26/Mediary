@@ -113,6 +113,20 @@ public class MediaryBuilderTests
     }
 
     [Fact]
+    public void AddOpenPipelineBehaviors_ClosedGeneric_IsIgnored()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        var builder = new MediaryBuilder(services);
+
+        // Act & Assert
+        var ex = Assert.Throws<InvalidOperationException>(() =>
+            builder.AddOpenPipelineBehaviors(typeof(ClosedLoggingBehavior)));
+
+        Assert.Contains("does not implement any valid", ex.Message);
+    }
+
+    [Fact]
     public void AddRequestHandlersFromAssembly_Registers_AllHandlers()
     {
         // Arrange

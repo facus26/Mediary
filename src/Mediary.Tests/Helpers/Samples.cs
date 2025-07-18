@@ -4,7 +4,11 @@ using Mediary.Pipeline;
 
 namespace Mediary.Tests.Helpers;
 
+[RequestInfo("Sample request")]
+public class SampleRequestOnlyWithDescription : IRequest { }
 public class SampleRequestWithoutInfo : IRequest { }
+public class SampleRequestWithResponseWithoutInfo : IRequest<SampleResponse> { }
+public class SampleClosedRequest : IRequest { }
 
 [RequestInfo("Sample request", "sample")]
 public class SampleRequest : IRequest { }
@@ -39,4 +43,9 @@ public class SampleOpenLoggingBehavior<TResponse, TRequest> : IRequestPipelineBe
     where TRequest : IRequest<TResponse>
 {
     public Task<TResponse> HandleAsync(TRequest request, Func<Task<TResponse>> next) => next();
+}
+
+public class ClosedLoggingBehavior : IRequestPipelineBehavior<SampleClosedRequest>
+{
+    public Task HandleAsync(SampleClosedRequest request, Func<Task> next) => next();
 }

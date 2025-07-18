@@ -79,4 +79,19 @@ public class RequestInfoTests
         Assert.Null(description);
         Assert.Empty(tags);
     }
+
+    [Fact]
+    public void GetDescription_ShouldReturnDescription_WhenOnlyDescriptionIsPresent()
+    {
+        // Arrange
+        var request = new SampleRequestOnlyWithDescription();
+
+        // Act
+        var description = request.GetDescription();
+        var tags = request.GetTags();
+
+        // Assert
+        Assert.Equal("Sample request", description);
+        Assert.Empty(tags);
+    }
 }

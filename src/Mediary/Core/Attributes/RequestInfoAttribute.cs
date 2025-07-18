@@ -24,6 +24,6 @@ public sealed class RequestInfoAttribute : Attribute
     public RequestInfoAttribute(string description, params string[] tags)
     {
         Description = description;
-        Tags = tags ?? Array.Empty<string>();
+        Tags = tags;
     }
 }
