@@ -186,7 +186,7 @@ Both built-in behaviors (`LoggingBehavior` and `PerformanceBehavior`) will use t
 
 This metadata is also accessible from within handlers or behaviors via extension methods.
 
-👉 See [`RequestInfoAttribute`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Core/RequestInfoAttribute.cs) in the source.
+👉 See [`RequestInfoAttribute`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Core/Attributes/RequestInfoAttribute.cs) in the source.
 
 ---
 
