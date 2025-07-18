@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Mediary.Core;
+using Mediary.Core.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace Mediary.Pipeline.Behaviors;
@@ -25,18 +26,35 @@ public sealed class PerformanceBehavior<TResponse, TRequest> : IRequestPipelineB
     /// </summary>
     public async Task<TResponse> HandleAsync(TRequest request, Func<Task<TResponse>> next)
     {
-        var stopwatch = Stopwatch.StartNew();
+        var requestDescription = request.GetDescription();
         var requestName = typeof(TRequest).Name;
+        var stopwatch = Stopwatch.StartNew();
 
-        _logger.LogInformation("Starting performance tracking for: {RequestName}", requestName);
+        try
+        {
+            _logger.LogInformation("Handling {RequestName}{Description}",
+                requestName,
+                requestDescription is not null ? $" - {requestDescription}" : ""
+            );
 
-        var response = await next();
+            var response = await next();
 
-        stopwatch.Stop();
+            stopwatch.Stop();
 
-        _logger.LogInformation("Request {RequestName} took {ElapsedMilliseconds} ms",
-            requestName, stopwatch.ElapsedMilliseconds);
+            _logger.LogInformation("✔ Handled {RequestName} in {ElapsedMilliseconds}ms",
+                requestName, stopwatch.ElapsedMilliseconds);
 
-        return response;
+            return response;
+        }
+        catch (Exception ex)
+        {
+            stopwatch.Stop();
+
+            _logger.LogError(ex, "✘ Error handling {RequestName} after {Elapsed}ms",
+                requestName,
+                stopwatch.ElapsedMilliseconds);
+
+            throw;
+        }
     }
 }

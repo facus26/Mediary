@@ -1,5 +1,26 @@
 ﻿# 📦 Changelog — Mediary
 
+## [v0.2.0] - 2025-07-17
+
+### ✨ Features
+
+* **Request Metadata (`[RequestInfo]`)**
+
+  * Added optional `[RequestInfo(string description, params string[] tags)]` attribute for request types.
+  * Enables descriptive logging, debugging, and tooling support.
+  * Request metadata is accessible at runtime via new extensions:
+
+    * `request.GetDescription()` and `request.GetTags()`
+  * 📄 See [RequestInfoAttribute.cs](https://github.com/facus26/Mediary/blob/main/src/Mediary/Core/RequestInfoAttribute.cs)
+
+### 🔧 Enhancements
+
+* **LoggingBehavior**
+  Now includes the request description (if available via `[RequestInfo]`) in logs for improved traceability.
+
+* **PerformanceBehavior**
+  Also logs the request description from `[RequestInfo]` to provide better profiling context.
+
 ## [v0.1.0] - 2025-07-15
 
 ### ✨ Features

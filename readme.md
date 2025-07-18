@@ -48,6 +48,7 @@ Or via the NuGet UI in Visual Studio by searching for **Mediary**.
 * ✅ Built-in dispatcher (`IRequestDispatcher`)
 * ✅ Middleware support (`IRequestPipelineBehavior`)
 * ✅ Generic and specific pipeline registration
+* ✅ Optional `[RequestInfo]` metadata for descriptive logging and tooling
 
 
 ---
@@ -142,70 +143,10 @@ This gives you **maximum flexibility** and full control over dependency injectio
 
 ## 🔍 Built-in Behaviors
 
-### `LoggingBehavior<TResponse, TRequest>`
-
-Logs the start and end of a request using `ILogger`.
-
-```csharp
-public class LoggingBehavior<TResponse, TRequest> : IRequestPipelineBehavior<TResponse, TRequest>
-    where TRequest : IRequest<TResponse>
-{
-    private readonly ILogger<LoggingBehavior<TResponse, TRequest>> _logger;
-
-    public LoggingBehavior(ILogger<LoggingBehavior<TResponse, TRequest>> logger) =>
-        _logger = logger;
-
-    public async Task<TResponse> HandleAsync(TRequest request, Func<Task<TResponse>> next)
-    {
-        var name = typeof(TRequest).Name;
-        _logger.LogInformation("Handling {RequestName}", name);
-
-        try
-        {
-            var result = await next();
-            _logger.LogInformation("Handled {RequestName}", name);
-            return result;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error handling {RequestName}", name);
-            throw;
-        }
-    }
-}
-```
-
----
-
-### `PerformanceBehavior<TResponse, TRequest>`
-
-Measures and logs execution time of each request.
-
-```csharp
-public class PerformanceBehavior<TResponse, TRequest> : IRequestPipelineBehavior<TResponse, TRequest>
-    where TRequest : IRequest<TResponse>
-{
-    private readonly ILogger<PerformanceBehavior<TResponse, TRequest>> _logger;
-
-    public PerformanceBehavior(ILogger<PerformanceBehavior<TResponse, TRequest>> logger) =>
-        _logger = logger;
-
-    public async Task<TResponse> HandleAsync(TRequest request, Func<Task<TResponse>> next)
-    {
-        var sw = Stopwatch.StartNew();
-        var name = typeof(TRequest).Name;
-
-        var result = await next();
-
-        sw.Stop();
-        _logger.LogInformation("{RequestName} took {Elapsed} ms", name, sw.ElapsedMilliseconds);
-
-        return result;
-    }
-}
-```
-
----
+- [`LoggingBehavior<TResponse, TRequest>`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Pipeline/Behaviors/LoggingBehavior.cs)  
+    Logs the start and end of a request using `ILogger`.
+- [`PerformanceBehavior<TResponse, TRequest>`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Pipeline/Behaviors/PerformanceBehavior.cs)  
+    Measures and logs execution time of each request.
 
 ### ✅ Register pipeline behaviors globally
 
@@ -215,8 +156,8 @@ You can register the logging and performance behaviors globally in two ways:
 
 ```csharp
 services.AddMediary()
-    .AddOpenPipelineBehaviors(typeof(LoggingBehavior<,>)
-    .AddOpenPipelineBehaviors(typeof(PerformanceBehavior<,>);
+    .AddOpenPipelineBehaviors(typeof(LoggingBehavior<,>))
+    .AddOpenPipelineBehaviors(typeof(PerformanceBehavior<,>));
 ```
 
 #### 2. Manual registration
@@ -227,6 +168,25 @@ services.AddScoped(typeof(IRequestPipelineBehavior<,>), typeof(PerformanceBehavi
 ```
 
 This will ensure that both behaviors are applied to all requests automatically.
+
+---
+
+## 🔖 Request Metadata
+
+You can optionally annotate your request types with descriptive metadata using the `[RequestInfo]` attribute:
+
+```csharp
+[RequestInfo("Creates a new user", "Command", "Users")]
+public class CreateUserCommand : ICommand<Guid> { }
+```
+
+This helps document the purpose of the request and can be consumed by logging, debugging, or inspection tools.
+
+Both built-in behaviors (`LoggingBehavior` and `PerformanceBehavior`) will use this description if available.
+
+This metadata is also accessible from within handlers or behaviors via extension methods.
+
+👉 See [`RequestInfoAttribute`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Core/RequestInfoAttribute.cs) in the source.
 
 ---
 

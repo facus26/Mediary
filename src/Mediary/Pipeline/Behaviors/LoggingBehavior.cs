@@ -1,4 +1,5 @@
 ﻿using Mediary.Core;
+using Mediary.Core.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace Mediary.Pipeline.Behaviors;
@@ -25,21 +26,25 @@ public sealed class LoggingBehavior<TResponse, TRequest> : IRequestPipelineBehav
     /// </summary>
     public async Task<TResponse> HandleAsync(TRequest request, Func<Task<TResponse>> next)
     {
+        var requestDescription = request.GetDescription();
         var requestName = typeof(TRequest).Name;
-
-        _logger.LogInformation("Handling request: {RequestName}", requestName);
 
         try
         {
+            _logger.LogInformation("Handling {RequestName}{Description}",
+                requestName,
+                requestDescription is not null ? $" - {requestDescription}" : ""
+            );
+
             var response = await next();
 
-            _logger.LogInformation("Successfully handled request: {RequestName}", requestName);
+            _logger.LogInformation("✔ Handled {RequestName}", requestName);
 
             return response;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Exception while handling request: {RequestName}", requestName);
+            _logger.LogError(ex, "✘ Error handling {RequestName}", requestName);
             throw;
         }
     }

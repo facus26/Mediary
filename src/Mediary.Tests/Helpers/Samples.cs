@@ -1,10 +1,15 @@
 ﻿using Mediary.Core;
+using Mediary.Core.Attributes;
 using Mediary.Pipeline;
 
 namespace Mediary.Tests.Helpers;
 
+public class SampleRequestWithoutInfo : IRequest { }
+
+[RequestInfo("Sample request", "sample")]
 public class SampleRequest : IRequest { }
 
+[RequestInfo("Sample request with response", "sample")]
 public class SampleRequestWithResponse : IRequest<SampleResponse> { }
 
 public class SampleResponse { }
