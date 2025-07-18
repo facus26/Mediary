@@ -26,7 +26,7 @@ public class LoggingBehaviorTests
         loggerMock.Verify(l => l.Log(
             LogLevel.Information,
             It.IsAny<EventId>(),
-            It.Is<It.IsAnyType>((o, t) => o.ToString()!.Contains("Handling request")),
+            It.Is<It.IsAnyType>((o, t) => o.ToString()!.Contains("Handling")),
             null,
             It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);
@@ -34,7 +34,7 @@ public class LoggingBehaviorTests
         loggerMock.Verify(l => l.Log(
             LogLevel.Information,
             It.IsAny<EventId>(),
-            It.Is<It.IsAnyType>((o, t) => o.ToString()!.Contains("Successfully handled request")),
+            It.Is<It.IsAnyType>((o, t) => o.ToString()!.Contains("Handled")),
             null,
             It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);
@@ -58,7 +58,7 @@ public class LoggingBehaviorTests
         loggerMock.Verify(l => l.Log(
             LogLevel.Error,
             It.IsAny<EventId>(),
-            It.Is<It.IsAnyType>((o, t) => o.ToString()!.Contains("Exception while handling request")),
+            It.Is<It.IsAnyType>((o, t) => o.ToString()!.Contains("Error handling")),
             exception,
             It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);

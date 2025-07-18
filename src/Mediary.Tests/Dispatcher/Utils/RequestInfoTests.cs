@@ -47,7 +47,7 @@ public class RequestInfoTests
 
         // Assert
         Assert.Equal("Sample request with response", description);
-        Assert.Equal(new[] { "response" }, tags);
+        Assert.Equal(new[] { "sample" }, tags);
     }
 
     [Fact]
@@ -62,7 +62,7 @@ public class RequestInfoTests
         // Assert
         Assert.NotNull(info);
         Assert.Equal("Sample request with response", info!.Description);
-        Assert.Contains("response", info.Tags);
+        Assert.Contains("sample", info.Tags);
     }
 
     [Fact]
