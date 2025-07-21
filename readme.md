@@ -1,7 +1,6 @@
 ﻿# Mediary — Lightweight Request Dispatcher for .NET
 
-**Mediary** is a minimal, open-source request/response dispatcher for .NET —  
-inspired by MediatR, but built from scratch with **no external dependencies**.
+**Mediary** is a minimal, open-source library for .NET that implements the Request/Handler (Mediator) pattern with pipeline support — inspired by **MediatR**, but built from scratch with **no external dependencies**.
 
 It provides clean request handling, extensible pipeline behaviors, and a flexible DI-friendly architecture — all without relying on third-party libraries.
 
