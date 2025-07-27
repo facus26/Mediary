@@ -2,7 +2,7 @@
 
 **Mediary** is a minimal, open-source library for .NET that implements the Request/Handler (Mediator) pattern with pipeline support — inspired by **MediatR**, but built from scratch with **no external dependencies**.
 
-It provides clean request handling, extensible pipeline behaviors, and a flexible DI-friendly architecture — all without relying on third-party libraries.
+Clean request handling, extensible pipeline behaviors, and a DI-friendly architecture — all with zero external dependencies.
 
 [![Build](https://github.com/facus26/Mediary/actions/workflows/build-test-coverage.yml/badge.svg)](https://github.com/facus26/Mediary/actions/workflows/build-test-coverage.yml)
 [![codecov](https://codecov.io/gh/facus26/Mediary/branch/main/graph/badge.svg)](https://codecov.io/gh/facus26/Mediary)
@@ -27,6 +27,25 @@ It focuses on **performance**, **clarity**, and **developer control**, while mai
 
 ---
 
+## 🧭 Table of Contents
+
+- [Installation](#-installation)
+- [Features](#-features)
+- [Usage](#-usage)
+- [Dependency Injection](#-dependency-injection)
+  - [Option 1 — Auto-registration (Recommended)](#-option-1--auto-registration-recommended)
+  - [Option 2 — Semi-manual (Builder API)](#-option-2--semi-manual-builder-api)
+  - [Option 3 — Fully manual](#-option-3--fully-manual)
+- [Built-in Behaviors](#-built-in-behaviors)
+  - [Register pipeline behaviors globally](#-register-pipeline-behaviors-globally)
+- [Handling Commands Without Return Values](#-handling-commands-without-return-values)
+    - [Built-in Result Types](#-built-in-result-types)
+- [Core Interfaces](#-core-interfaces)
+- [Aliases](#-aliases) 
+- [Request Metadata](#-request-metadata)
+
+---
+
 ## 📦 Installation
 
 You can install **Mediary** via NuGet:
@@ -43,12 +62,14 @@ Or via the NuGet UI in Visual Studio by searching for **Mediary**.
 
 ## 🚀 Features
 
-* ✅ Async request handling via `IRequest<TResponse>` / `IRequest`
-* ✅ Built-in dispatcher (`IRequestDispatcher`)
-* ✅ Middleware support (`IRequestPipelineBehavior`)
+* ✅ Async request handling via [`IRequest<TResponse>`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Core/IRequest.cs)
+* ✅ Handler support via [`IRequestHandler<TResponse, TRequest>`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Core/IRequestHandler.cs)
+* ✅ Semantic result types: [`Unit`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Core/Results/Unit.cs), [`Success`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Core/Results/Success.cs), [`Created`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Core/Results/Created.cs), [`Updated`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Core/Results/Updated.cs), [`Deleted`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Core/Results/Deleted.cs)
+* ✅ Dispatcher support via [`IRequestDispatcher`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Dispatcher/IRequestDispatcher.cs)
+* ✅ Middleware support [`IRequestPipelineBehavior<TResponse, TRequest>`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Pipeline/IRequestPipelineBehavior.cs)
 * ✅ Generic and specific pipeline registration
-* ✅ Optional `[RequestInfo]` metadata for descriptive logging and tooling
-
+* ✅ Optional [`[RequestInfo]`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Core/Attributes/RequestInfoAttribute.cs) metadata for descriptive logging and tooling
+* ✅ Aliases for semantic intent: [`ICommand<TResponse>`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Core/ICommand.cs), [`IQuery<TResponse>`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Core/IQuery.cs)
 
 ---
 
@@ -83,7 +104,7 @@ public class PlanService
         _dispatcher = dispatcher;
 
     public Task<List<PlanDto>> GetPlansAsync() =>
-        _dispatcher.ExecuteAsync<GetAllPlansQuery, List<PlanDto>>(new GetAllPlansQuery());
+        _dispatcher.DispatchAsync<GetAllPlansQuery, List<PlanDto>>(new GetAllPlansQuery());
 }
 ```
 
@@ -104,9 +125,9 @@ services.AddMediary()
 
 This will:
 
-* Register the `IRequestDispatcher`
-* Scan and register all `IRequestHandler<>` and `IRequestHandler<,>`
-* Scan and register all `IRequestPipelineBehavior<>` and `IRequestPipelineBehavior<,>`
+* Register the [`IRequestDispatcher`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Dispatcher/IRequestDispatcher.cs)
+* Scan and register all [`IRequestHandler<,>`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Core/IRequestHandler.cs)
+* Scan and register all [`IRequestPipelineBehavior<,>`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Pipeline/IRequestPipelineBehavior.cs)
 
 ### 🔧 Option 2 — Semi-manual (Builder API)
 
@@ -114,9 +135,7 @@ If you prefer full control but want to use the builder pattern:
 
 ```csharp
 services.AddMediary()
-    .AddRequestHandler<GetAllPlansQuery, GetAllPlansHandler>()
     .AddRequestHandler<List<PlanDto>, GetAllPlansQuery, GetAllPlansHandler>()
-    .AddPipelineBehaviors<GetAllPlansQuery, LoggingBehavior<GetAllPlansQuery>>()
     .AddPipelineBehaviors<List<PlanDto>, GetAllPlansQuery, LoggingBehavior<List<PlanDto>, GetAllPlansQuery>>();
 ```
 
@@ -142,10 +161,10 @@ This gives you **maximum flexibility** and full control over dependency injectio
 
 ## 🔍 Built-in Behaviors
 
-- [`LoggingBehavior<TResponse, TRequest>`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Pipeline/Behaviors/LoggingBehavior.cs)  
-    Logs the start and end of a request using `ILogger`.
-- [`PerformanceBehavior<TResponse, TRequest>`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Pipeline/Behaviors/PerformanceBehavior.cs)  
-    Measures and logs execution time of each request.
+| Interface | Description |
+|----------|-------------|
+| [`LoggingBehavior<TResponse, TRequest>`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Pipeline/Behaviors/LoggingBehavior.cs) | Logs the start and end of a request using `ILogger`. |
+| [`PerformanceBehavior<TResponse, TRequest>`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Pipeline/Behaviors/PerformanceBehavior.cs) | Measures and logs execution time of each request. |
 
 ### ✅ Register pipeline behaviors globally
 
@@ -170,6 +189,59 @@ This will ensure that both behaviors are applied to all requests automatically.
 
 ---
 
+## ✅ Core Interfaces
+
+| Interface | Description |
+|----------|-------------|
+| [`IRequest<TResponse>`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Core/IRequest.cs) | Base request contract used for dispatching |
+| [`IRequestHandler<TResponse, TRequest>`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Core/IRequestHandler.cs) | Handles a specific request and returns a response |
+| [`IRequestPipelineBehavior<TResponse, TRequest>`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Pipeline/IRequestPipelineBehavior.cs) | Defines pipeline logic before/after the handler |
+| [`IRequestDispatcher`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Dispatcher/IRequestDispatcher.cs) | Responsible for dispatching requests through the pipeline |
+
+---
+
+## ⚙️ Handling Commands Without Return Values
+
+Mediary uses a single interface: [`IRequest<TResponse>`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Core/IRequest.cs).  
+When you don’t need to return data from a command, you can use semantic result types to indicate intent:
+
+### ✅ Built-in Result Types
+
+| Type | Purpose |
+|------|---------|
+| [`Unit`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Core/Results/Unit.cs) | Used when no response is needed (replaces `void`) |
+| [`Success`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Core/Results/Success.cs) | Indicates a generic successful result |
+| [`Created`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Core/Results/Created.cs) | Indicates a resource was created |
+| [`Updated`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Core/Results/Updated.cs) | Indicates a resource was updated |
+| [`Deleted`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Core/Results/Deleted.cs) | Indicates a resource was deleted |
+
+These types are lightweight `readonly struct`s defined in [`Mediary.Core.Results`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Core/Results).
+
+#### Example: Command with no output
+```csharp
+public class ClearCacheCommand : IRequest<Unit> { }
+
+public class ClearCacheHandler : IRequestHandler<Unit, ClearCacheCommand>
+{
+    public Task<Unit> HandleAsync(ClearCacheCommand request) =>
+        Task.FromResult(Unit.Value);
+}
+```
+
+#### Example: Command with semantic return
+
+```csharp
+public class CreateUserCommand : IRequest<Created> { }
+
+public class CreateUserHandler : IRequestHandler<Created, CreateUserCommand>
+{
+    public Task<Created> HandleAsync(CreateUserCommand request) =>
+        Task.FromResult(Created.Value);
+}
+```
+
+---
+
 ## 🔖 Request Metadata
 
 You can optionally annotate your request types with descriptive metadata using the `[RequestInfo]` attribute:
@@ -189,65 +261,24 @@ This metadata is also accessible from within handlers or behaviors via extension
 
 ---
 
-## ✅ Core Interfaces
-
-```csharp
-public interface IRequest { }
-
-public interface IRequest<TResponse> { }
-
-public interface IRequestHandler<TRequest>
-    where TRequest : IRequest
-{
-    Task HandleAsync(TRequest request);
-}
-
-public interface IRequestHandler<TResponse, TRequest>
-    where TRequest : IRequest<TResponse>
-{
-    Task<TResponse> HandleAsync(TRequest request);
-}
-
-public interface IRequestPipelineBehavior<TRequest>
-    where TRequest : IRequest
-{
-    Task HandleAsync(TRequest request, Func<Task> next);
-}
-
-public interface IRequestPipelineBehavior<TResponse, TRequest>
-    where TRequest : IRequest<TResponse>
-{
-    Task<TResponse> HandleAsync(TRequest request, Func<Task<TResponse>> next);
-}
-
-public interface IRequestDispatcher
-{
-    Task DispatchAsync<TRequest>(TRequest request)
-        where TRequest : IRequest;
-
-    Task<TResponse> ExecuteAsync<TResponse, TRequest>(TRequest request)
-        where TRequest : IRequest<TResponse>;
-}
-```
-
----
-
 ## 🪪 Aliases
 
 For semantic clarity, Mediary exposes aliases for intent-based request types:
 
 | Alias                 | Inherits              | Purpose                           |
 | --------------------- | --------------------- | --------------------------------- |
-| `IQuery`              | `IRequest`            | Read-only request, no response    |
-| `IQuery<TResponse>`   | `IRequest<TResponse>` | Read-only request with a response |
-| `ICommand`            | `IRequest`            | Write command, no response        |
-| `ICommand<TResponse>` | `IRequest<TResponse>` | Write command with a response     |
+| [`IQuery<TResponse>`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Core/IQuery.cs) | [`IRequest<TResponse>`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Core/IRequest.cs) | Read-only request                 |
+| [`ICommand<TResponse>`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Core/ICommand.cs) | [`IRequest<TResponse>`](https://github.com/facus26/Mediary/blob/main/src/Mediary/Core/IRequest.cs) | Write command                     |
 
 Aliases are optional and meant to improve readability:
 
 ```csharp
+// Represents: GET /users/{id}
 public class GetUserByIdQuery : IQuery<UserDto> { }
+
+// Represents: POST /users
 public class CreateUserCommand : ICommand<UserDto> { }
+
 ```
 
 ---

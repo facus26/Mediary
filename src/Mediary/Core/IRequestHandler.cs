@@ -15,18 +15,3 @@ public interface IRequestHandler<TResponse, TRequest>
     /// <returns>A task representing the asynchronous operation, with a response of type <typeparamref name="TResponse"/>.</returns>
     public Task<TResponse> HandleAsync(TRequest request);
 }
-
-/// <summary>
-/// Defines a handler for a request that does not return a response.
-/// </summary>
-/// <typeparam name="TRequest">The request type handled.</typeparam>
-public interface IRequestHandler<TRequest>
-    where TRequest : IRequest
-{
-    /// <summary>
-    /// Handles the specified request.
-    /// </summary>
-    /// <param name="request">The request to handle.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    public Task HandleAsync(TRequest request);
-}

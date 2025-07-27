@@ -9,32 +9,6 @@ namespace Mediary.Pipeline;
 public static class BehaviorInvoker
 {
     /// <summary>
-    /// Executes a request without response, invoking the pipeline behaviors in order,
-    /// and finally the request handler.
-    /// </summary>
-    /// <typeparam name="TRequest">The request type.</typeparam>
-    /// <param name="request">The request instance to handle.</param>
-    /// <param name="handler">The handler to execute at the end of the pipeline.</param>
-    /// <param name="behaviors">The pipeline behaviors to apply around the handler.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    public static Task ExecuteWithPipeline<TRequest>(
-        TRequest request,
-        IRequestHandler<TRequest> handler,
-        IEnumerable<IRequestPipelineBehavior<TRequest>> behaviors)
-        where TRequest : IRequest
-    {
-        var pipeline = () => handler.HandleAsync(request);
-
-        foreach (var behavior in behaviors.Reverse())
-        {
-            var next = pipeline;
-            pipeline = () => behavior.HandleAsync(request, next);
-        }
-
-        return pipeline();
-    }
-
-    /// <summary>
     /// Executes a request with response, invoking the pipeline behaviors in order,
     /// and finally the request handler.
     /// </summary>

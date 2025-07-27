@@ -49,10 +49,7 @@ public class MediaryServiceCollectionExtensionsTests
 
     private sealed class FakeDispatcher : IRequestDispatcher
     {
-        public Task DispatchAsync<TRequest>(TRequest request) where TRequest : IRequest =>
-            Task.CompletedTask;
-
-        public Task<TResponse> ExecuteAsync<TResponse, TRequest>(TRequest request)
+        public Task<TResponse> DispatchAsync<TResponse, TRequest>(TRequest request)
             where TRequest : IRequest<TResponse> =>
             Task.FromResult(default(TResponse)!);
     }

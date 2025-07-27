@@ -6,15 +6,15 @@
     <Nullable>enable</Nullable>
 
     <!-- Versioning -->
-    <Version>0.2.0</Version>
-    <AssemblyVersion>0.2.0.0</AssemblyVersion>
-    <FileVersion>0.2.0.0</FileVersion>
-    <PackageVersion>0.2.0</PackageVersion>
+    <Version>0.3.0</Version>
+    <AssemblyVersion>0.3.0.0</AssemblyVersion>
+    <FileVersion>0.3.0.0</FileVersion>
+    <PackageVersion>0.3.0</PackageVersion>
 
     <!-- NuGet Package Metadata -->
     <PackageId>Mediary</PackageId>
     <Title>Mediary</Title>
-    <Description>Mediary is a lightweight .NET request/response dispatcher with pipeline support — inspired by MediatR but built from scratch with no external dependencies.</Description>
+    <Description>Mediary is a minimal, open-source library for .NET that implements the Request/Handler (Mediator) pattern with pipeline support — built from scratch with no external dependencies.</Description>
     <Authors>Facundo Juarez</Authors>
     <Company>facus26</Company>
     <PackageProjectUrl>https://github.com/facus26/Mediary</PackageProjectUrl>

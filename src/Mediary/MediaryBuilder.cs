@@ -26,20 +26,6 @@ public sealed class MediaryBuilder
     }
 
     /// <summary>
-    /// Registers a single non-generic request handler for a specific request type.
-    /// </summary>
-    /// <typeparam name="TRequest">The request type.</typeparam>
-    /// <typeparam name="TImplementation">The concrete implementation of the handler.</typeparam>
-    /// <returns>The current instance of <see cref="MediaryBuilder"/>.</returns>
-    public MediaryBuilder AddRequestHandler<TRequest, TImplementation>()
-        where TRequest : IRequest
-        where TImplementation : class, IRequestHandler<TRequest>
-    {
-        Services.AddScoped<IRequestHandler<TRequest>, TImplementation>();
-        return this;
-    }
-
-    /// <summary>
     /// Registers a request handler with a response for a specific request type.
     /// </summary>
     /// <typeparam name="TResponse">The response type.</typeparam>
@@ -51,20 +37,6 @@ public sealed class MediaryBuilder
         where TImplementation : class, IRequestHandler<TResponse, TRequest>
     {
         Services.AddScoped<IRequestHandler<TResponse, TRequest>, TImplementation>();
-        return this;
-    }
-
-    /// <summary>
-    /// Registers a pipeline behavior for a non-generic request type.
-    /// </summary>
-    /// <typeparam name="TRequest">The request type.</typeparam>
-    /// <typeparam name="TImplementation">The concrete implementation of the behavior.</typeparam>
-    /// <returns>The current instance of <see cref="MediaryBuilder"/>.</returns>
-    public MediaryBuilder AddPipelineBehaviors<TRequest, TImplementation>()
-        where TImplementation : class, IRequestPipelineBehavior<TRequest>
-        where TRequest : IRequest
-    {
-        Services.AddScoped<IRequestPipelineBehavior<TRequest>, TImplementation>();
         return this;
     }
 
@@ -94,9 +66,7 @@ public sealed class MediaryBuilder
     {
         var interfaces = implementationType.GetInterfaces()
             .Where(iface => iface.IsGenericType)
-            .Where(iface =>
-                iface.GetGenericTypeDefinition() == typeof(IRequestPipelineBehavior<>) ||
-                iface.GetGenericTypeDefinition() == typeof(IRequestPipelineBehavior<,>))
+            .Where(iface => iface.GetGenericTypeDefinition() == typeof(IRequestPipelineBehavior<,>))
             .Where(iface => iface.ContainsGenericParameters)
             .Distinct()
             .ToList();
@@ -121,9 +91,8 @@ public sealed class MediaryBuilder
             .GetTypes()
             .Where(t => !t.IsAbstract && !t.IsInterface && t.IsClass)
             .SelectMany(t => t.GetInterfaces(), (impl, iface) => new { impl, iface })
-            .Where(x => x.iface.IsGenericType &&
-                        (x.iface.GetGenericTypeDefinition() == typeof(IRequestHandler<>) ||
-                         x.iface.GetGenericTypeDefinition() == typeof(IRequestHandler<,>)))
+            .Where(x => x.iface.IsGenericType)
+            .Where(x => x.iface.GetGenericTypeDefinition() == typeof(IRequestHandler<,>))
             .ToList();
 
         foreach (var reg in handlerTypes)
@@ -145,9 +114,8 @@ public sealed class MediaryBuilder
             .GetTypes()
             .Where(t => !t.IsAbstract && !t.IsInterface && t.IsClass)
             .SelectMany(t => t.GetInterfaces(), (impl, iface) => new { impl, iface })
-            .Where(x => x.iface.IsGenericType &&
-                (x.iface.GetGenericTypeDefinition() == typeof(IRequestPipelineBehavior<>) ||
-                 x.iface.GetGenericTypeDefinition() == typeof(IRequestPipelineBehavior<,>)))
+            .Where(x => x.iface.IsGenericType)
+            .Where(x => x.iface.GetGenericTypeDefinition() == typeof(IRequestPipelineBehavior<,>))
             .ToList();
 
         foreach (var reg in types)
