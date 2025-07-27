@@ -13,10 +13,10 @@ public class PerformanceBehaviorTests
     public async Task HandleAsync_LogsExecutionTime_RequestWithInfo()
     {
         // Arrange
-        var loggerMock = new Mock<ILogger<PerformanceBehavior<SampleResponse, SampleRequestWithResponse>>>();
-        var behavior = new PerformanceBehavior<SampleResponse, SampleRequestWithResponse>(loggerMock.Object);
+        var loggerMock = new Mock<ILogger<PerformanceBehavior<SampleResponse, SampleRequest>>>();
+        var behavior = new PerformanceBehavior<SampleResponse, SampleRequest>(loggerMock.Object);
 
-        var request = new SampleRequestWithResponse();
+        var request = new SampleRequest();
         var response = new SampleResponse();
 
         var expectedMessage = $"Handling {request.GetType().Name} - {request.GetDescription()!}";
@@ -49,10 +49,10 @@ public class PerformanceBehaviorTests
     public async Task HandleAsync_LogsExecutionTime_RequestWithoutInfo()
     {
         // Arrange
-        var loggerMock = new Mock<ILogger<PerformanceBehavior<SampleResponse, SampleRequestWithResponseWithoutInfo>>>();
-        var behavior = new PerformanceBehavior<SampleResponse, SampleRequestWithResponseWithoutInfo>(loggerMock.Object);
+        var loggerMock = new Mock<ILogger<PerformanceBehavior<SampleResponse, SampleRequestWithoutInfo>>>();
+        var behavior = new PerformanceBehavior<SampleResponse, SampleRequestWithoutInfo>(loggerMock.Object);
 
-        var request = new SampleRequestWithResponseWithoutInfo();
+        var request = new SampleRequestWithoutInfo();
         var response = new SampleResponse();
 
         var expectedMessage = $"Handling {request.GetType().Name}";
@@ -84,10 +84,10 @@ public class PerformanceBehaviorTests
     [Fact]
     public async Task HandleAsync_LogsErrorOnException()
     {
-        var loggerMock = new Mock<ILogger<PerformanceBehavior<SampleResponse, SampleRequestWithResponse>>>();
-        var behavior = new PerformanceBehavior<SampleResponse, SampleRequestWithResponse>(loggerMock.Object);
+        var loggerMock = new Mock<ILogger<PerformanceBehavior<SampleResponse, SampleRequest>>>();
+        var behavior = new PerformanceBehavior<SampleResponse, SampleRequest>(loggerMock.Object);
 
-        var request = new SampleRequestWithResponse();
+        var request = new SampleRequest();
         var exception = new InvalidOperationException("Test failure");
 
         // Act & Assert

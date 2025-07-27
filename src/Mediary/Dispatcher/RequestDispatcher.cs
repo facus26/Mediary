@@ -20,17 +20,7 @@ public sealed class RequestDispatcher : IRequestDispatcher
         _serviceProvider = serviceProvider;
 
     /// <inheritdoc />
-    public async Task DispatchAsync<TRequest>(TRequest request)
-        where TRequest : IRequest
-    {
-        var handler = _serviceProvider.GetRequiredService<IRequestHandler<TRequest>>();
-        var behaviors = _serviceProvider.GetServices<IRequestPipelineBehavior<TRequest>>().ToList();
-
-        await BehaviorInvoker.ExecuteWithPipeline(request, handler, behaviors);
-    }
-
-    /// <inheritdoc />
-    public async Task<TResponse> ExecuteAsync<TResponse, TRequest>(TRequest request)
+    public async Task<TResponse> DispatchAsync<TResponse, TRequest>(TRequest request)
         where TRequest : IRequest<TResponse>
     {
         var handler = _serviceProvider.GetRequiredService<IRequestHandler<TResponse, TRequest>>();

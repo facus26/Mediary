@@ -15,11 +15,11 @@ public class MediaryBuilderTests
         var services = new ServiceCollection();
         var builder = new MediaryBuilder(services);
 
-        builder.AddRequestHandler<SampleRequest, SampleRequestHandler>();
+        builder.AddRequestHandler<SampleResponse, SampleRequest, SampleRequestHandler>();
 
         // Act
         var provider = services.BuildServiceProvider();
-        var handler = provider.GetService<IRequestHandler<SampleRequest>>();
+        var handler = provider.GetService<IRequestHandler<SampleResponse, SampleRequest>>();
 
         // Assert
         Assert.NotNull(handler);
@@ -27,57 +27,21 @@ public class MediaryBuilderTests
     }
 
     [Fact]
-    public void AddRequestHandler_WithResponse_Registers_Handler_Correctly()
+    public void AddPipelineBehavior_Registers_Correctly()
     {
         // Arrange
         var services = new ServiceCollection();
         var builder = new MediaryBuilder(services);
 
-        builder.AddRequestHandler<SampleResponse, SampleRequestWithResponse, SampleRequestWithResponseHandler>();
+        builder.AddPipelineBehaviors<SampleResponse, SampleRequest, SampleLoggingBehavior>();
 
         // Act
         var provider = services.BuildServiceProvider();
-        var handler = provider.GetService<IRequestHandler<SampleResponse, SampleRequestWithResponse>>();
-
-        // Assert
-        Assert.NotNull(handler);
-        Assert.IsType<SampleRequestWithResponseHandler>(handler);
-    }
-
-    [Fact]
-    public void AddPipelineBehavior_Registers_NonGeneric_Correctly()
-    {
-        // Arrange
-        var services = new ServiceCollection();
-        var builder = new MediaryBuilder(services);
-
-        builder.AddPipelineBehaviors<SampleRequest, SampleLoggingBehavior>();
-
-        // Act
-        var provider = services.BuildServiceProvider();
-        var behavior = provider.GetService<IRequestPipelineBehavior<SampleRequest>>();
+        var behavior = provider.GetService<IRequestPipelineBehavior<SampleResponse, SampleRequest>>();
 
         // Assert
         Assert.NotNull(behavior);
         Assert.IsType<SampleLoggingBehavior>(behavior);
-    }
-
-    [Fact]
-    public void AddPipelineBehavior_WithResponse_Registers_Correctly()
-    {
-        // Arrange
-        var services = new ServiceCollection();
-        var builder = new MediaryBuilder(services);
-
-        builder.AddPipelineBehaviors<SampleResponse, SampleRequestWithResponse, SampleLoggingBehaviorWithResponse>();
-
-        // Act
-        var provider = services.BuildServiceProvider();
-        var behavior = provider.GetService<IRequestPipelineBehavior<SampleResponse, SampleRequestWithResponse>>();
-
-        // Assert
-        Assert.NotNull(behavior);
-        Assert.IsType<SampleLoggingBehaviorWithResponse>(behavior);
     }
 
     [Fact]
@@ -91,11 +55,11 @@ public class MediaryBuilderTests
 
         // Act
         var provider = services.BuildServiceProvider();
-        var behavior = provider.GetService<IRequestPipelineBehavior<SampleResponse, SampleRequestWithResponse>>();
+        var behavior = provider.GetService<IRequestPipelineBehavior<SampleResponse, SampleRequest>>();
 
         // Assert
         Assert.NotNull(behavior);
-        Assert.IsType<SampleOpenLoggingBehavior<SampleResponse, SampleRequestWithResponse>>(behavior);
+        Assert.IsType<SampleOpenLoggingBehavior<SampleResponse, SampleRequest>>(behavior);
     }
 
     [Fact]
@@ -137,7 +101,7 @@ public class MediaryBuilderTests
 
         // Act
         var provider = services.BuildServiceProvider();
-        var handler = provider.GetService<IRequestHandler<SampleRequest>>();
+        var handler = provider.GetService<IRequestHandler<SampleResponse, SampleRequest>>();
 
         // Assert
         Assert.NotNull(handler);
@@ -155,7 +119,7 @@ public class MediaryBuilderTests
 
         // Act
         var provider = services.BuildServiceProvider();
-        var behavior = provider.GetService<IRequestPipelineBehavior<SampleRequest>>();
+        var behavior = provider.GetService<IRequestPipelineBehavior<SampleResponse, SampleRequest>>();
 
         // Assert
         Assert.NotNull(behavior);

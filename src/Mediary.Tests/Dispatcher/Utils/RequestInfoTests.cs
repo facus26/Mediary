@@ -18,51 +18,7 @@ public class RequestInfoTests
 
         // Assert
         Assert.Equal("Sample request", description);
-        Assert.Equal(new[] { "sample" }, tags);
-    }
-
-    [Fact]
-    public void GetInfo_ShouldReturnAttributeInstance_WhenPresent()
-    {
-        // Arrange
-        var request = new SampleRequest();
-
-        // Act
-        var info = request.GetInfo();
-
-        // Assert
-        Assert.NotNull(info);
-        Assert.Equal("Sample request", info!.Description);
-        Assert.Contains("sample", info.Tags);
-    }
-    [Fact]
-    public void GetDescription_ShouldReturnDescription_WhenAttributeIsPresent_InRequestWithResponse()
-    {
-        // Arrange
-        var request = new SampleRequestWithResponse();
-
-        // Act
-        var description = request.GetDescription();
-        var tags = request.GetTags();
-
-        // Assert
-        Assert.Equal("Sample request with response", description);
-        Assert.Equal(new[] { "sample" }, tags);
-    }
-
-    [Fact]
-    public void GetInfo_ShouldReturnAttributeInstance_WhenPresent_InRequestWithResponse()
-    {
-        // Arrange
-        var request = new SampleRequestWithResponse();
-
-        // Act
-        var info = request.GetInfo();
-
-        // Assert
-        Assert.NotNull(info);
-        Assert.Equal("Sample request with response", info!.Description);
-        Assert.Contains("sample", info.Tags);
+        Assert.Equal(["sample"], tags);
     }
 
     [Fact]
@@ -84,7 +40,7 @@ public class RequestInfoTests
     public void GetDescription_ShouldReturnDescription_WhenOnlyDescriptionIsPresent()
     {
         // Arrange
-        var request = new SampleRequestOnlyWithDescription();
+        var request = new SampleRequestWithoutTags();
 
         // Act
         var description = request.GetDescription();

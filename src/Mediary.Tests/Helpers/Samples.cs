@@ -4,39 +4,21 @@ using Mediary.Pipeline;
 
 namespace Mediary.Tests.Helpers;
 
-[RequestInfo("Sample request")]
-public class SampleRequestOnlyWithDescription : IRequest { }
-public class SampleRequestWithoutInfo : IRequest { }
-public class SampleRequestWithResponseWithoutInfo : IRequest<SampleResponse> { }
-public class SampleClosedRequest : IRequest { }
+public class SampleResponse { }
+public class SampleClosedRequest : IRequest<SampleResponse> { }
 
 [RequestInfo("Sample request", "sample")]
-public class SampleRequest : IRequest { }
+public class SampleRequest : IRequest<SampleResponse> { }
 
-[RequestInfo("Sample request with response", "sample")]
-public class SampleRequestWithResponse : IRequest<SampleResponse> { }
+[RequestInfo("Sample request")]
+public class SampleRequestWithoutTags : IRequest<SampleResponse> { }
+public class SampleRequestWithoutInfo : IRequest<SampleResponse> { }
 
-public class SampleResponse { }
 
-public class SampleRequestHandler : IRequestHandler<SampleRequest>
+public class SampleRequestHandler : IRequestHandler<SampleResponse, SampleRequest>
 {
-    public Task HandleAsync(SampleRequest request) => Task.CompletedTask;
-}
-
-public class SampleRequestWithResponseHandler : IRequestHandler<SampleResponse, SampleRequestWithResponse>
-{
-    public Task<SampleResponse> HandleAsync(SampleRequestWithResponse request) =>
+    public Task<SampleResponse> HandleAsync(SampleRequest request) =>
         Task.FromResult(new SampleResponse());
-}
-
-public class SampleLoggingBehavior : IRequestPipelineBehavior<SampleRequest>
-{
-    public Task HandleAsync(SampleRequest request, Func<Task> next) => next();
-}
-
-public class SampleLoggingBehaviorWithResponse : IRequestPipelineBehavior<SampleResponse, SampleRequestWithResponse>
-{
-    public Task<SampleResponse> HandleAsync(SampleRequestWithResponse request, Func<Task<SampleResponse>> next) => next();
 }
 
 public class SampleOpenLoggingBehavior<TResponse, TRequest> : IRequestPipelineBehavior<TResponse, TRequest>
@@ -45,7 +27,12 @@ public class SampleOpenLoggingBehavior<TResponse, TRequest> : IRequestPipelineBe
     public Task<TResponse> HandleAsync(TRequest request, Func<Task<TResponse>> next) => next();
 }
 
-public class ClosedLoggingBehavior : IRequestPipelineBehavior<SampleClosedRequest>
+public class SampleLoggingBehavior : IRequestPipelineBehavior<SampleResponse, SampleRequest>
 {
-    public Task HandleAsync(SampleClosedRequest request, Func<Task> next) => next();
+    public Task<SampleResponse> HandleAsync(SampleRequest request, Func<Task<SampleResponse>> next) => next();
+}
+
+public class ClosedLoggingBehavior : IRequestPipelineBehavior<SampleResponse, SampleClosedRequest>
+{
+    public Task<SampleResponse> HandleAsync(SampleClosedRequest request, Func<Task<SampleResponse>> next) => next();
 }
