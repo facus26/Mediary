@@ -1,5 +1,8 @@
 ﻿namespace Mediary.Core.Results;
 
+/// <summary>
+/// Indicates that a resource was successfully deleted. Used as a semantic response for commands.
+/// </summary>
 public readonly struct Deleted : IEquatable<Deleted>
 {
     public static readonly Deleted Value = new();

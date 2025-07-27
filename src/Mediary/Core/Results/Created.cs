@@ -1,5 +1,8 @@
 ﻿namespace Mediary.Core.Results;
 
+/// <summary>
+/// Indicates that a resource was successfully created. Used as a semantic response for commands.
+/// </summary>
 public readonly struct Created : IEquatable<Created>
 {
     public static readonly Created Value = new();

@@ -1,5 +1,8 @@
 ﻿namespace Mediary.Core.Results;
 
+/// <summary>
+/// Represents the absence of a meaningful value. Equivalent to <c>void</c> but usable as a return type.
+/// </summary>
 public readonly struct Unit : IEquatable<Unit>
 {
     public static readonly Unit Value = new();

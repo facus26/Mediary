@@ -1,5 +1,8 @@
 ﻿namespace Mediary.Core.Results;
 
+/// <summary>
+/// Indicates that a resource was successfully updated. Used as a semantic response for commands.
+/// </summary>
 public readonly struct Updated : IEquatable<Updated>
 {
     public static readonly Updated Value = new();

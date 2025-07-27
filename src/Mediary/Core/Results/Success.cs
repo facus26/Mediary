@@ -1,5 +1,8 @@
 ﻿namespace Mediary.Core.Results;
 
+/// <summary>
+/// Represents a generic successful result for a command that does not return data.
+/// </summary>
 public readonly struct Success : IEquatable<Success>
 {
     public static readonly Success Value = new();
