@@ -11,14 +11,20 @@ public class RequestInfoTests
     {
         // Arrange
         var request = new SampleRequest();
+        var expectedDescription = "Sample request";
+        var expectedTags = new[] { "sample" };
 
         // Act
+        var info = request.GetInfo();
         var description = request.GetDescription();
         var tags = request.GetTags();
 
         // Assert
-        Assert.Equal("Sample request", description);
-        Assert.Equal(["sample"], tags);
+        Assert.NotNull(info);
+        Assert.Equal(expectedDescription, info.Description);
+        Assert.Equal(expectedDescription, description);
+        Assert.Equal(expectedTags, info.Tags);
+        Assert.Equal(expectedTags, tags);
     }
 
     [Fact]
@@ -28,10 +34,12 @@ public class RequestInfoTests
         var request = new SampleRequestWithoutInfo();
 
         // Act
+        var info = request.GetInfo();
         var description = request.GetDescription();
         var tags = request.GetTags();
 
         // Assert
+        Assert.Null(info);
         Assert.Null(description);
         Assert.Empty(tags);
     }
@@ -41,13 +49,17 @@ public class RequestInfoTests
     {
         // Arrange
         var request = new SampleRequestWithoutTags();
+        var expectedDescription = "Sample request";
 
         // Act
+        var info = request.GetInfo();
         var description = request.GetDescription();
         var tags = request.GetTags();
 
         // Assert
-        Assert.Equal("Sample request", description);
+        Assert.NotNull(info);
+        Assert.Equal(expectedDescription, info.Description);
+        Assert.Equal(expectedDescription, description);
         Assert.Empty(tags);
     }
 }
