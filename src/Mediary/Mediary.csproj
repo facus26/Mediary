@@ -25,7 +25,7 @@
     <Copyright>Copyright © 2025 facus26</Copyright>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PackageIcon>Assets\icon_128.png</PackageIcon>
+    <PackageIcon>icon_128.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Assets\" />
+    <None Include="Assets/icon_128.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
